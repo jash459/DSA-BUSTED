@@ -3,7 +3,7 @@ public:
     int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
         int n=gas.size();
         int totalgas=0,totalcost=0;
-        int tocurrgastalgas=0, startingpoint=0;
+        int currgas=0, startingpoint=0;
         for(int i=0;i<n;i++)
         {
             //these two variable are to check if no case is possible
