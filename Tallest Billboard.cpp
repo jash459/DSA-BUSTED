@@ -1,43 +1,19 @@
 class Solution {
-public:
+    int memo[20][10001];
+    int dp(vector<int>& rods, int i, int balance) {
+        if (i == rods.size()) return balance == 5000 ? 0 : INT_MIN;
+        if (memo[i][balance] != -1) return memo[i][balance];
 
-  int tallestBillboard(vector<int>& rods) {
+        int take = (dp(rods, i+1, balance + rods[i]) != INT_MIN ? dp(rods, i+1, balance + rods[i]) + rods[i] : INT_MIN);
+        int give = dp(rods, i+1, balance - rods[i]);
+        int skip = dp(rods, i+1, balance);
 
-        int sum = 0;
-
-         for (int rod : rods) 
-            sum += rod;
-        
-          int dp[sum + 1];
-
-         <!-- // initialize the first element of the dp array to 0
-             //  since a sum of 0 is achievable with no rods. -->
-
-           dp[0] = 0;
-
-           for (int i = 1; i <= sum; i++) 
-               dp[i] = -1;
-           
-         for (int rod : rods) {
-
-         int dpCopy[sum + 1];
-         copy(dp, dp + (sum + 1), dpCopy);
-
-          for (int i = 0; i <= sum - rod; i++) {
-    
-           <!--// check if the value at index i in the dpCopy
-               // array is less than 0. If it is, it means that the 
-               // current sum i is not achievable, so it continues 
-               // to the next iteration. -->
-
-           if (dpCopy[i] < 0) continue;
-
-           dp[i + rod] = max(dp[i + rod], dpCopy[i]);
-           dp[abs(i - rod)] = max(dp[abs(i - rod)], dpCopy[i] + min(i, rod));
-
-      }
+        memo[i][balance] = max(max(take, give), skip);
+        return memo[i][balance];
     }
-
-    return dp[0];
-  }
+public:
+    int tallestBillboard(vector<int>& rods) {
+        fill_n(&memo[0][0], 20 * 10001, -1);
+        return dp(rods, 0, 5000) != INT_MIN ? dp(rods, 0, 5000) : 0;
+    }
 };
