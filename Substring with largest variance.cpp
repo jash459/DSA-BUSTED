@@ -1,31 +1,41 @@
-class Solution:
-    def largestVariance(self, s: str) -> int:
-        count1 = 0
-        count2 = 0
-        max_variance = 0
-        
-        # create distinct list of character pairs
-        pairs = [(l1, l2) for l1 in set(s) for l2 in set(s) if l1 != l2]
 
-        # run once for original string order, then again for reverse string order
-        for runs in range(2):
-            for pair in pairs:
-                count1 = count2 = 0
-                for letter in s:
-                    # no reason to process letters that aren't part of the current pair
-                    if letter not in pair:
-                        continue
-                    if letter == pair[0]:
-                        count1 += 1
-                    elif letter == pair[1]:
-                        count2 += 1
-                    if count1 < count2:
-                        count1 = count2 = 0
-                    elif count1 > 0 and count2 > 0:
-                        max_variance = max(max_variance, count1 - count2)
-                
-            
-            # reverse the string for the second time around
-            s = s[::-1]
-                
-        return max_variance
+class Solution {
+public:
+    int largestVariance(string s) {
+        int count1 = 0;
+        int count2 = 0;
+        int max_variance = 0;
+
+        // Create a distinct set of character pairs
+        unordered_set<char> distinct_chars(s.begin(), s.end());
+
+        // Run once for original string order, then again for reverse string order
+        for (int runs = 0; runs < 2; runs++) {
+            for (char l1 : distinct_chars) {
+                for (char l2 : distinct_chars) {
+                    if (l1 == l2) {
+                        continue;
+                    }
+                    count1 = count2 = 0;
+                    for (char letter : s) {
+                        if (letter == l1) {
+                            count1++;
+                        } else if (letter == l2) {
+                            count2++;
+                        }
+                        if (count1 < count2) {
+                            count1 = count2 = 0;
+                        } else if (count1 > 0 && count2 > 0) {
+                            max_variance = max(max_variance, count1 - count2);
+                        }
+                    }
+                }
+            }
+
+            // Reverse the string for the second time around
+            reverse(s.begin(), s.end());
+        }
+
+        return max_variance;
+    }
+};
